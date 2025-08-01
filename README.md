@@ -2,6 +2,8 @@
 
 A powerful and lightweight desktop tool for viewing raw pixel data from binary files. Designed for developers, engineers, and researchers working with uncompressed image sensors, video codecs, and computer vision algorithms.
 
+![Application Screenshot](ui.png)
+
 This application allows you to open any binary file and interpret its contents as video frames, with full control over resolution, pixel format, and memory layout.
 
 ## Features
