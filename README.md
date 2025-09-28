@@ -31,6 +31,7 @@ This application allows you to open any binary file and interpret its contents a
 - **YUV 4:2:2 Planar**: `YUV422P (I422)`
 - **RGB 24-bit**: `RGB888`
 - **RGBA 32-bit**: `RGBA8888`
+- **BGRA 32-bit**: `BGRA8888`
 
 ## How to Use
 
