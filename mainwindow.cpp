@@ -138,6 +138,21 @@ void MainWindow::i422_to_rgb24(const uchar *yuv, uchar *rgb, int width, int heig
     }
 }
 
+void MainWindow::bgra_to_rgba(const unsigned int *bgra, unsigned int *rgba, int width, int height, int linesize)
+{
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+            int index = i * linesize + j;
+            unsigned char a = (bgra[index] & 0xff000000) >> 24;
+            unsigned char r = (bgra[index] & 0x00ff0000) >> 16;
+            unsigned char g = (bgra[index] & 0x0000ff00) >> 8;
+            unsigned char b = (bgra[index] & 0x000000ff);
+            unsigned int result =a << 24 | b << 16 | g << 8 | r;
+            rgba[index] = result;
+        }
+    }
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), mappedData(nullptr), mappedDataSize(0), currentFrame(0), totalFrames(0), image(nullptr)
 {
@@ -238,6 +253,8 @@ void MainWindow::updateImage()
         frameSize = linesize * height * 3;
     } else if (format == "RGBA8888") {
         frameSize = linesize * height * 4; // RGBX is 4 bytes per pixel, linesize is in bytes
+    } else if (format == "BGRA8888") {
+        frameSize = linesize * height * 4;
     }
 
     if (frameSize <= 0) {
@@ -288,6 +305,9 @@ void MainWindow::updateImage()
         if((mappedDataSize - frameOffset) < width*height*4)
             copy_size = mappedDataSize - frameOffset;
         memcpy(newImage->bits(), frameData, copy_size);
+    } else if (format == "BGRA8888") {
+        newImage = new QImage(width, height, QImage::Format_RGBA8888);
+        bgra_to_rgba((const unsigned int *)frameData, (unsigned int *)newImage->bits(), width, height, linesize);
     }
 
     if (newImage && !newImage->isNull()) {
@@ -406,6 +426,7 @@ void MainWindow::createSettingsPanel()
     pixelFormatComboBox->addItem("YUV422P (I422)");
     pixelFormatComboBox->addItem("RGB888");
     pixelFormatComboBox->addItem("RGBA8888");
+    pixelFormatComboBox->addItem("BGRA8888");
     formLayout->addRow(tr("Pixel Format:"), pixelFormatComboBox);
 
     // Linesize

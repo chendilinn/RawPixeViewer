@@ -45,6 +45,7 @@ private:
     // YUV422P (I422)
     void i422_to_rgb24(const uchar *yuv, uchar *rgb, int width, int height, int linesize);
 
+    void bgra_to_rgba(const unsigned int *bgra, unsigned int *rgba, int width, int height, int linesize);
     // Image data
     QFile currentImageFile;
     uchar *mappedData;
